@@ -1,0 +1,18 @@
+The li3_perf library provides a toolbar for your Lithium application
+useful for debugging. Various performance factors are displayed in this
+toolbar including time to load, database query explains, and more.
+The Lithium log files (within resources/tmp/logs) are also displayed
+in this toolbar.
+
+Note: It is suggested that you have a program called "ccze" installed
+on your machine. While not required, it makes the log output colored
+and formatted with HTML. Otherwise, it will just be one color.
+
+Also Note: You must have a newer version of Lithium. There was
+a change to the lithium/data/collection class. An additional method
+was added so that the $this->_result could be returned. This property
+contains the MongoCursor, which is required to display the explain()
+for Mongo queries.
+
+
+
