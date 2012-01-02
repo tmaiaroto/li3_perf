@@ -1,0 +1,69 @@
+/** 
+ * Color Reference
+ * Green: #4ddb49
+ * Blue: #00a5f5
+ * Pink: #FF59FF
+ * Dark Blue: #004e72
+*/
+html {
+	padding-top: 24px !important;
+}
+#li3-perf-toolbar {
+	background: url('../img/97bg.png') repeat;
+	color: #fff;
+	width: 100%;
+	height: 24px;
+	display: block;
+	position: fixed;
+	top: 0;
+	z-index: 100;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	font-family: 'Arial', sans-serif;
+}
+
+#li3-perf-toolbar-content-wrapper {
+	padding: 4px;
+	background: url('../img/97bg.png') repeat;
+}
+
+#li3-perf-content {
+	padding: 20px;
+}
+
+#li3-perf-content h2 {
+	/*color: #FF59FF;*/
+	color: #00a5f5;
+	font-size: 14px;
+}
+
+#li3-perf-toolbar-links {
+	float: right;
+	margin-right: 5px;
+}
+
+#li3-perf-toolbar-links a {
+	display: block;
+	float: left;
+	margin: 0 4px 0 4px;
+	font-weight: normal;
+}
+
+a.li3-perf-link {
+	color: #fff;
+}
+a.li3-perf-link:hover {
+	color: #00a5f5;
+}
+a.li3-perf-link img {
+	width: 16px;
+	display: inline;
+	float: left;
+	margin-right: 4px;
+}
+
+/* Content */
+#li3-perf-vars, #li3-perf-log, #li3-perf-timing, #li3-perf-queries {
+	display: none;
+}
