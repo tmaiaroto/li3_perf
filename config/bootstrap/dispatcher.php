@@ -2,6 +2,7 @@
 use lithium\action\Dispatcher;
 use lithium\template\View;
 use li3_perf\extensions\util\Data;
+use lithium\core\Libraries;
 
 // Apply a filter that will render the toolbar and mark some timers.
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
@@ -41,14 +42,43 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 			array(
 				'library' => 'li3_perf',
 				'template' => 'toolbar',
-				'layout' => 'empty'
+				'layout' => 'default'
 		));
 		
 		// Add the toolbar to the body of the current page. Don't just echo it out now.
 		// There are sometimes issues with the headers already being sent otherwise.
 		// TODO: IF proper HTML were to be desired, perhaps insert $toolbar into the body in the
 		// proper spot within the HTML.
-		if(isset($result->body[0])) {
+		$skip = false;
+		$li3_perf = Libraries::get('li3_perf');
+		if(isset($li3_perf['skip'])) {
+			$controller = isset($params['request']->params['controller']) ? $params['request']->params['controller']:null;
+			$action = isset($params['request']->params['action']) ? $params['request']->params['action']:null;
+			$library = isset($params['request']->params['library']) ? $params['request']->params['library']:null;
+			
+			// Check to see if the toolbar should be shown for this library
+			if(isset($li3_perf['skip']['library'])) {
+				if(in_array($library, $li3_perf['skip']['library'])) {
+					$skip = true;
+				}
+			}
+			
+			// Check to see if the toolbar should be shown for this controller
+			if(isset($li3_perf['skip']['controller'])) {
+				if(in_array($controller, $li3_perf['skip']['controller'])) {
+					$skip = true;
+				}
+			}
+			
+			// Check to see if the toolbar should be shown for this action
+			if(isset($li3_perf['skip']['action'])) {
+				if(in_array($action, $li3_perf['skip']['action'])) {
+					$skip = true;
+				}
+			}
+		}
+		
+		if(isset($result->body[0]) && !$skip) {
 			$result->body[0] = $toolbar . $result->body[0];
 		}
 	}

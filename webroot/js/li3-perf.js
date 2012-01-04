@@ -11,6 +11,7 @@ $(document).ready(function() {
 		toolbarExpand();
 		$('#li3-perf-content div').hide();
 		$('#li3-perf-queries').show();
+		$('#li3-perf-queries div').show();
 	});
 	
 	// Show timers
@@ -18,6 +19,7 @@ $(document).ready(function() {
 		toolbarExpand();
 		$('#li3-perf-content div').hide();
 		$('#li3-perf-timing').show();
+		$('#li3-perf-timing div').show();
 	});
 	
 	// Show variables
@@ -25,6 +27,7 @@ $(document).ready(function() {
 		toolbarExpand();
 		$('#li3-perf-content div').hide();
 		$('#li3-perf-vars').show();
+		$('#li3-perf-vars div').show();
 	});
 	
 	// Show logs
