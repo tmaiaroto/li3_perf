@@ -1,7 +1,389 @@
 /*
- * g.Raphael 0.4.1 - Charting library, based on Raphaël
+ * g.Raphael 0.4 - Charting library, based on Raphaël
  *
  * Copyright (c) 2009 Dmitry Baranovskiy (http://g.raphaeljs.com)
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+ * 
+ * Added the bugfix of http://github.com/DmitryBaranovskiy/g.raphael/issues#issue/11 : 
+ * replaced all the "bars[i * (multi || 1) + j]" by "bars[j][i]"
  */
-Raphael.fn.g.barchart=function(C,A,a,d,O,u){u=u||{};var P={round:"round",sharp:"sharp",soft:"soft"}[u.type]||"square",n=parseFloat(u.gutter||"20%"),M=this.set(),v=this.set(),e=this.set(),r=this.set(),w=Math.max.apply(Math,O),N=[],c=this,B=0,F=u.colors||this.g.colors,q=O.length;if(this.raphael.is(O[0],"array")){w=[];B=q;q=0;for(var K=O.length;K--;){v.push(this.set());w.push(Math.max.apply(Math,O[K]));q=Math.max(q,O[K].length);}if(u.stacked){for(var K=q;K--;){var l=0;for(var J=O.length;J--;){l+=+O[J][K]||0;}N.push(l);}}for(var K=O.length;K--;){if(O[K].length<q){for(var J=q;J--;){O[K].push(0);}}}w=Math.max.apply(Math,u.stacked?N:w);}w=(u.to)||w;var D=a/(q*(100+n)+n)*100,b=D*n/100,g=u.vgutter==null?20:u.vgutter,t=[],k=C+b,f=(d-2*g)/w;if(!u.stretch){b=Math.round(b);D=Math.floor(D);}!u.stacked&&(D/=B||1);for(var K=0;K<q;K++){t=[];for(var J=0;J<(B||1);J++){var L=Math.round((B?O[J][K]:O[K])*f),m=A+d-g-L,H=this.g.finger(Math.round(k+D/2),m+L,D,L,true,P).attr({stroke:"none",fill:F[B?J:K]});if(B){v[J].push(H);}else{v.push(H);}H.y=m;H.x=Math.round(k+D/2);H.w=D;H.h=L;H.value=B?O[J][K]:O[K];if(!u.stacked){k+=D;}else{t.push(H);}}if(u.stacked){var I;r.push(I=this.rect(t[0].x-t[0].w/2,A,D,d).attr(this.g.shim));I.bars=this.set();var o=0;for(var E=t.length;E--;){t[E].toFront();}for(var E=0,p=t.length;E<p;E++){var H=t[E],z,L=(o+H.value)*f,G=this.g.finger(H.x,A+d-g-!!o*0.5,D,L,true,P,1);I.bars.push(H);o&&H.attr({path:G});H.h=L;H.y=A+d-g-!!o*0.5-L;e.push(z=this.rect(H.x-H.w/2,H.y,D,H.value*f).attr(this.g.shim));z.bar=H;z.value=H.value;o+=H.value;}k+=D;}k+=b;}r.toFront();k=C+b;if(!u.stacked){for(var K=0;K<q;K++){for(var J=0;J<(B||1);J++){var z;e.push(z=this.rect(Math.round(k),A+g,D,d-g).attr(this.g.shim));z.bar=B?v[J][K]:v[K];z.value=z.bar.value;k+=D;}k+=b;}}M.label=function(y,S){y=y||[];this.labels=c.set();var T,h=-Infinity;if(u.stacked){for(var x=0;x<q;x++){var Q=0;for(var s=0;s<(B||1);s++){Q+=B?O[s][x]:O[x];if(s==B-1){var U=c.g.labelise(y[x],Q,w);T=c.g.text(v[x*(B||1)+s].x,A+d-g/2,U).insertBefore(e[x*(B||1)+s]);var R=T.getBBox();if(R.x-7<h){T.remove();}else{this.labels.push(T);h=R.x+R.width;}}}}}else{for(var x=0;x<q;x++){for(var s=0;s<(B||1);s++){var U=c.g.labelise(B?y[s]&&y[s][x]:y[x],B?O[s][x]:O[x],w);T=c.g.text(v[x*(B||1)+s].x,S?A+d-g/2:v[x*(B||1)+s].y-10,U).insertBefore(e[x*(B||1)+s]);var R=T.getBBox();if(R.x-7<h){T.remove();}else{this.labels.push(T);h=R.x+R.width;}}}}return this;};M.hover=function(i,h){r.hide();e.show();e.mouseover(i).mouseout(h);return this;};M.hoverColumn=function(i,h){e.hide();r.show();h=h||function(){};r.mouseover(i).mouseout(h);return this;};M.click=function(h){r.hide();e.show();e.click(h);return this;};M.each=function(j){if(!Raphael.is(j,"function")){return this;}for(var h=e.length;h--;){j.call(e[h]);}return this;};M.eachColumn=function(j){if(!Raphael.is(j,"function")){return this;}for(var h=r.length;h--;){j.call(r[h]);}return this;};M.clickColumn=function(h){e.hide();r.show();r.click(h);return this;};M.push(v,e,r);M.bars=v;M.covers=e;return M;};Raphael.fn.g.hbarchart=function(n,l,B,w,c,r){r=r||{};var e={round:"round",sharp:"sharp",soft:"soft"}[r.type]||"square",f=parseFloat(r.gutter||"20%"),u=this.set(),A=this.set(),h=this.set(),E=this.set(),M=Math.max.apply(Math,c),a=[],o=this,C=0,m=r.colors||this.g.colors,H=c.length;if(this.raphael.is(c[0],"array")){M=[];C=H;H=0;for(var G=c.length;G--;){A.push(this.set());M.push(Math.max.apply(Math,c[G]));H=Math.max(H,c[G].length);}if(r.stacked){for(var G=H;G--;){var p=0;for(var F=c.length;F--;){p+=+c[F][G]||0;}a.push(p);}}for(var G=c.length;G--;){if(c[G].length<H){for(var F=H;F--;){c[G].push(0);}}}M=Math.max.apply(Math,r.stacked?a:M);}M=(r.to)||M;var J=Math.floor(w/(H*(100+f)+f)*100),k=Math.floor(J*f/100),g=[],b=l+k,d=(B-1)/M;!r.stacked&&(J/=C||1);for(var G=0;G<H;G++){g=[];for(var F=0;F<(C||1);F++){var L=C?c[F][G]:c[G],I=this.g.finger(n,b+J/2,Math.round(L*d),J-1,false,e).attr({stroke:"none",fill:m[C?F:G]});if(C){A[F].push(I);}else{A.push(I);}I.x=n+Math.round(L*d);I.y=b+J/2;I.w=Math.round(L*d);I.h=J;I.value=+L;if(!r.stacked){b+=J;}else{g.push(I);}}if(r.stacked){var q=this.rect(n,g[0].y-g[0].h/2,B,J).attr(this.g.shim);E.push(q);q.bars=this.set();var v=0;for(var t=g.length;t--;){g[t].toFront();}for(var t=0,D=g.length;t<D;t++){var I=g[t],K,L=Math.round((v+I.value)*d),z=this.g.finger(n,I.y,L,J-1,false,e,1);q.bars.push(I);v&&I.attr({path:z});I.w=L;I.x=n+L;h.push(K=this.rect(n+v*d,I.y-I.h/2,I.value*d,J).attr(this.g.shim));K.bar=I;v+=I.value;}b+=J;}b+=k;}E.toFront();b=l+k;if(!r.stacked){for(var G=0;G<H;G++){for(var F=0;F<(C||1);F++){var K=this.rect(n,b,B,J).attr(this.g.shim);h.push(K);K.bar=C?A[F][G]:A[G];K.value=K.bar.value;b+=J;}b+=k;}}u.label=function(R,P){R=R||[];this.labels=o.set();for(var O=0;O<H;O++){for(var N=0;N<C;N++){var y=o.g.labelise(C?R[N]&&R[N][O]:R[O],C?c[N][O]:c[O],M);var Q=P?A[O*(C||1)+N].x-J/2+3:n+5,x=P?"end":"start",s;this.labels.push(s=o.g.text(Q,A[O*(C||1)+N].y,y).attr({"text-anchor":x}).insertBefore(h[0]));if(s.getBBox().x<n+5){s.attr({x:n+5,"text-anchor":"start"});}else{A[O*(C||1)+N].label=s;}}}return this;};u.hover=function(j,i){E.hide();h.show();i=i||function(){};h.mouseover(j).mouseout(i);return this;};u.hoverColumn=function(j,i){h.hide();E.show();i=i||function(){};E.mouseover(j).mouseout(i);return this;};u.each=function(s){if(!Raphael.is(s,"function")){return this;}for(var j=h.length;j--;){s.call(h[j]);}return this;};u.eachColumn=function(s){if(!Raphael.is(s,"function")){return this;}for(var j=E.length;j--;){s.call(E[j]);}return this;};u.click=function(i){E.hide();h.show();h.click(i);return this;};u.clickColumn=function(i){h.hide();E.show();E.click(i);return this;};u.push(A,h,E);u.bars=A;u.covers=h;return u;};
+
+Raphael.fn.g.barchart = function (x, y, width, height, values, opts) {
+    opts = opts || {};
+    var type = {round: "round", sharp: "sharp", soft: "soft"}[opts.type] || "square",
+        gutter = parseFloat(opts.gutter || "20%"),
+        chart = this.set(),
+        bars = this.set(),
+        covers = this.set(),
+        covers2 = this.set(),
+        total = Math.max.apply(Math, values),
+        stacktotal = [],
+        paper = this,
+        multi = 0,
+        colors = opts.colors || this.g.colors,
+        len = values.length;
+    if (this.raphael.is(values[0], "array")) {
+        total = [];
+        multi = len;
+        len = 0;
+        for (var i = values.length; i--;) {
+            bars.push(this.set());
+            total.push(Math.max.apply(Math, values[i]));
+            len = Math.max(len, values[i].length);
+        }
+        if (opts.stacked) {
+            for (var i = len; i--;) {
+                var tot = 0;
+                for (var j = values.length; j--;) {
+                    tot +=+ values[j][i] || 0;
+                }
+                stacktotal.push(tot);
+            }
+        }
+        for (var i = values.length; i--;) {
+            if (values[i].length < len) {
+                for (var j = len; j--;) {
+                    values[i].push(0);
+                }
+            }
+        }
+        total = Math.max.apply(Math, opts.stacked ? stacktotal : total);
+    }
+    
+    total = (opts.to) || total;
+    var barwidth = width / (len * (100 + gutter) + gutter) * 100,
+        barhgutter = barwidth * gutter / 100,
+        barvgutter = opts.vgutter == null ? 20 : opts.vgutter,
+        stack = [],
+        X = x + barhgutter,
+        Y = (height - 2 * barvgutter) / total;
+    if (!opts.stretch) {
+        barhgutter = Math.round(barhgutter);
+        barwidth = Math.floor(barwidth);
+    }
+    !opts.stacked && (barwidth /= multi || 1);
+    for (var i = 0; i < len; i++) {
+        stack = [];
+        for (var j = 0; j < (multi || 1); j++) {
+            var h = Math.round((multi ? values[j][i] : values[i]) * Y),
+                top = y + height - barvgutter - h,
+                bar = this.g.finger(Math.round(X + barwidth / 2), top + h, barwidth, h, true, type).attr({stroke: colors[multi ? j : i], fill: colors[multi ? j : i]});
+            if (multi) {
+                bars[j].push(bar);
+            } else {
+                bars.push(bar);
+            }
+            bar.y = top;
+            bar.x = Math.round(X + barwidth / 2);
+            bar.w = barwidth;
+            bar.h = h;
+            bar.value = multi ? values[j][i] : values[i];
+            if (!opts.stacked) {
+                X += barwidth;
+            } else {
+                stack.push(bar);
+            }
+        }
+        if (opts.stacked) {
+            var cvr;
+            covers2.push(cvr = this.rect(stack[0].x - stack[0].w / 2, y, barwidth, height).attr(this.g.shim));
+            cvr.bars = this.set();
+            var size = 0;
+            for (var s = stack.length; s--;) {
+                stack[s].toFront();
+            }
+            for (var s = 0, ss = stack.length; s < ss; s++) {
+                var bar = stack[s],
+                    cover,
+                    h = (size + bar.value) * Y,
+                    path = this.g.finger(bar.x, y + height - barvgutter - !!size * .5, barwidth, h, true, type, 1);
+                cvr.bars.push(bar);
+                size && bar.attr({path: path});
+                bar.h = h;
+                bar.y = y + height - barvgutter - !!size * .5 - h;
+                covers.push(cover = this.rect(bar.x - bar.w / 2, bar.y, barwidth, bar.value * Y).attr(this.g.shim));
+                cover.bar = bar;
+                cover.value = bar.value;
+                size += bar.value;
+            }
+            X += barwidth;
+        }
+        X += barhgutter;
+    }
+    covers2.toFront();
+    X = x + barhgutter;
+    if (!opts.stacked) {
+        for (var i = 0; i < len; i++) {
+            for (var j = 0; j < (multi || 1); j++) {
+                var cover;
+                covers.push(cover = this.rect(Math.round(X), y + barvgutter, barwidth, height - barvgutter).attr(this.g.shim));
+                cover.bar = multi ? bars[j][i] : bars[i];
+                cover.value = cover.bar.value;
+                X += barwidth;
+            }
+            X += barhgutter;
+        }
+    }
+    chart.label = function (labels, isBottom) {
+        labels = labels || [];
+        this.labels = paper.set();
+        var L, l = -Infinity;
+        if (opts.stacked) {
+            for (var i = 0; i < len; i++) {
+                var tot = 0;
+                for (var j = 0; j < (multi || 1); j++) {
+                    tot += multi ? values[j][i] : values[i];
+                    if (j == multi - 1) {
+                        var label = paper.g.labelise(labels[i], tot, total);
+                        L = paper.g.text(bars[j][i].x, y + height - barvgutter / 2, label).insertBefore(covers[i * (multi || 1) + j]);
+                        var bb = L.getBBox();
+                        if (bb.x - 7 < l) {
+                            L.remove();
+                        } else {
+                            this.labels.push(L);
+                            l = bb.x + bb.width;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (var i = 0; i < len; i++) {
+                for (var j = 0; j < (multi || 1); j++) {
+                    var label = paper.g.labelise(multi ? labels[j] && labels[j][i] : labels[i], multi ? values[j][i] : values[i], total);
+                    L = paper.g.text(bars[j][i].x, isBottom ? y + height - barvgutter / 2 : bars[j][i].y - 10, label).insertBefore(covers[i * (multi || 1) + j]);
+                    var bb = L.getBBox();
+                    if (bb.x - 7 < l) {
+                        L.remove();
+                    } else {
+                        this.labels.push(L);
+                        l = bb.x + bb.width;
+                    }
+                }
+            }
+        }
+        return this;
+    };
+    chart.hover = function (fin, fout) {
+        covers2.hide();
+        covers.show();
+        covers.mouseover(fin).mouseout(fout);
+        return this;
+    };
+    chart.hoverColumn = function (fin, fout) {
+        covers.hide();
+        covers2.show();
+        fout = fout || function () {};
+        covers2.mouseover(fin).mouseout(fout);
+        return this;
+    };
+    chart.click = function (f) {
+        covers2.hide();
+        covers.show();
+        covers.click(f);
+        return this;
+    };
+    chart.each = function (f) {
+        if (!Raphael.is(f, "function")) {
+            return this;
+        }
+        for (var i = covers.length; i--;) {
+            f.call(covers[i]);
+        }
+        return this;
+    };
+    chart.eachColumn = function (f) {
+        if (!Raphael.is(f, "function")) {
+            return this;
+        }
+        for (var i = covers2.length; i--;) {
+            f.call(covers2[i]);
+        }
+        return this;
+    };
+    chart.clickColumn = function (f) {
+        covers.hide();
+        covers2.show();
+        covers2.click(f);
+        return this;
+    };
+    chart.push(bars, covers, covers2);
+    chart.bars = bars;
+    chart.covers = covers;
+    return chart;
+};
+Raphael.fn.g.hbarchart = function (x, y, width, height, values, opts) {
+    opts = opts || {};
+    var type = {round: "round", sharp: "sharp", soft: "soft"}[opts.type] || "square",
+        gutter = parseFloat(opts.gutter || "20%"),
+        chart = this.set(),
+        bars = this.set(),
+        covers = this.set(),
+        covers2 = this.set(),
+        total = Math.max.apply(Math, values),
+        stacktotal = [],
+        paper = this,
+        multi = 0,
+        colors = opts.colors || this.g.colors,
+        len = values.length;
+    if (this.raphael.is(values[0], "array")) {
+        total = [];
+        multi = len;
+        len = 0;
+        for (var i = values.length; i--;) {
+            bars.push(this.set());
+            total.push(Math.max.apply(Math, values[i]));
+            len = Math.max(len, values[i].length);
+        }
+        if (opts.stacked) {
+            for (var i = len; i--;) {
+                var tot = 0;
+                for (var j = values.length; j--;) {
+                    tot +=+ values[j][i] || 0;
+                }
+                stacktotal.push(tot);
+            }
+        }
+        for (var i = values.length; i--;) {
+            if (values[i].length < len) {
+                for (var j = len; j--;) {
+                    values[i].push(0);
+                }
+            }
+        }
+        total = Math.max.apply(Math, opts.stacked ? stacktotal : total);
+    }
+    
+    total = (opts.to) || total;
+    var barheight = Math.floor(height / (len * (100 + gutter) + gutter) * 100),
+        bargutter = Math.floor(barheight * gutter / 100),
+        stack = [],
+        Y = y + bargutter,
+        X = (width - 1) / total;
+    !opts.stacked && (barheight /= multi || 1);
+    for (var i = 0; i < len; i++) {
+        stack = [];
+        for (var j = 0; j < (multi || 1); j++) {
+            var val = multi ? values[j][i] : values[i],
+                bar = this.g.finger(x, Y + barheight / 2, Math.round(val * X), barheight - 1, false, type).attr({stroke: colors[multi ? j : i], fill: colors[multi ? j : i]});
+            if (multi) {
+                bars[j].push(bar);
+            } else {
+                bars.push(bar);
+            }
+            bar.x = x + Math.round(val * X);
+            bar.y = Y + barheight / 2;
+            bar.w = Math.round(val * X);
+            bar.h = barheight;
+            bar.value = +val;
+            if (!opts.stacked) {
+                Y += barheight;
+            } else {
+                stack.push(bar);
+            }
+        }
+        if (opts.stacked) {
+            var cvr = this.rect(x, stack[0].y - stack[0].h / 2, width, barheight).attr(this.g.shim);
+            covers2.push(cvr);
+            cvr.bars = this.set();
+            var size = 0;
+            for (var s = stack.length; s--;) {
+                stack[s].toFront();
+            }
+            for (var s = 0, ss = stack.length; s < ss; s++) {
+                var bar = stack[s],
+                    cover,
+                    val = Math.round((size + bar.value) * X),
+                    path = this.g.finger(x, bar.y, val, barheight - 1, false, type, 1);
+                cvr.bars.push(bar);
+                size && bar.attr({path: path});
+                bar.w = val;
+                bar.x = x + val;
+                covers.push(cover = this.rect(x + size * X, bar.y - bar.h / 2, bar.value * X, barheight).attr(this.g.shim));
+                cover.bar = bar;
+                size += bar.value;
+            }
+            Y += barheight;
+        }
+        Y += bargutter;
+    }
+    covers2.toFront();
+    Y = y + bargutter;
+    if (!opts.stacked) {
+        for (var i = 0; i < len; i++) {
+            for (var j = 0; j < multi; j++) {
+                var cover = this.rect(x, Y, width, barheight).attr(this.g.shim);
+                covers.push(cover);
+                cover.bar = bars[j][i];
+                Y += barheight;
+            }
+            Y += bargutter;
+        }
+    }
+    chart.label = function (labels, isRight) {
+        labels = labels || [];
+        this.labels = paper.set();
+        for (var i = 0; i < len; i++) {
+            for (var j = 0; j < multi; j++) {
+                var  label = paper.g.labelise(multi ? labels[j] && labels[j][i] : labels[i], multi ? values[j][i] : values[i], total);
+                var X = isRight ? bars[j][i].x - barheight / 2 + 3 : x + 5,
+                    A = isRight ? "end" : "start",
+                    L;
+                this.labels.push(L = paper.g.text(X, bars[j][i].y, label).attr({"text-anchor": A}).insertBefore(covers[0]));
+                if (L.getBBox().x < x + 5) {
+                    L.attr({x: x + 5, "text-anchor": "start"});
+                } else {
+                    bars[j][i].label = L;
+                }
+            }
+        }
+        return this;
+    };
+    chart.hover = function (fin, fout) {
+        covers2.hide();
+        covers.show();
+        fout = fout || function () {};
+        covers.mouseover(fin).mouseout(fout);
+        return this;
+    };
+    chart.hoverColumn = function (fin, fout) {
+        covers.hide();
+        covers2.show();
+        fout = fout || function () {};
+        covers2.mouseover(fin).mouseout(fout);
+        return this;
+    };
+    chart.each = function (f) {
+        if (!Raphael.is(f, "function")) {
+            return this;
+        }
+        for (var i = covers.length; i--;) {
+            f.call(covers[i]);
+        }
+        return this;
+    };
+    chart.eachColumn = function (f) {
+        if (!Raphael.is(f, "function")) {
+            return this;
+        }
+        for (var i = covers2.length; i--;) {
+            f.call(covers2[i]);
+        }
+        return this;
+    };
+    chart.click = function (f) {
+        covers2.hide();
+        covers.show();
+        covers.click(f);
+        return this;
+    };
+    chart.clickColumn = function (f) {
+        covers.hide();
+        covers2.show();
+        covers2.click(f);
+        return this;
+    };
+    chart.push(bars, covers, covers2);
+    chart.bars = bars;
+    chart.covers = covers;
+    return chart;
+};
