@@ -67,3 +67,9 @@ a.li3-perf-link img {
 #li3-perf-vars, #li3-perf-log, #li3-perf-timing, #li3-perf-queries {
 	display: none;
 }
+
+span.li3-perf-stat-value {
+	font-weight: bold;
+	font-size: 14px;
+	color: #FF59FF;
+}
