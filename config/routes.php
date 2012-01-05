@@ -13,7 +13,7 @@ Router::connect("/{:library}/{:asset_type:js|img|css}/{:args}", array(), functio
 
 // This one is cool. It outputs the last few lines of a log file.
 // If CCZE is installed the log output will be in HTML and styles can be altered easily with CSS.
-Router::connect('/li3_perf/tail/{:file}/{:lines}', array('lines' => 10, 'file' => LITHIUM_APP_PATH . '/resources/tmp/logs/debug.log'), function($request) {
+Router::connect('/li3_perf/tail/{:file}/{:lines}', array('lines' => 25, 'file' => LITHIUM_APP_PATH . '/resources/tmp/logs/debug.log'), function($request) {
 		$lines = $request->params['lines'];
 		$logfile = $request->params['file'];
 		
