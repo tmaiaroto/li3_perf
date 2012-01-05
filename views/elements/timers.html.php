@@ -3,14 +3,16 @@ $percentages = array();
 $total = $timers['complete_load_with_li3_perf'];
 $percentages['complete_load'] = ($timers['complete_load'] / $total) * 100;
 $percentages['dispatch_cycle'] = ($timers['dispatch_cycle'] / $total) * 100;
-var_dump($percentages);
-
+$percentages['routing'] = ($timers['routing'] / $total) * 100;
+$percentages['call'] = ($timers['call'] / $total) * 100;
 ?>
 <h2>Time to Load</h2>
 <?=$this->li3perf->printVars($timers); ?>
 
-<div id="holder" style="height: 900px;"></div>
-    
+<p></p>
+<div id="holder" style="height: 205px;"></div>
+<p>Note: The time to route and call the code for the request should just about equal the complete dispatch cycle. If not, something is wrong.</p>
+
 <script type="text/javascript" charset="utf-8"> 
 window.onload = function () {
 	var hover_function = function () {
@@ -60,19 +62,23 @@ window.onload = function () {
 	//r.g.barchart(330, 10, 300, 220, data2, {stacked: true});
 	
 	var timer_labels = [
-		["Dispatch Cycle - <?=number_format($timers['dispatch_cycle'], 2); ?>s"],
+		["Routing - <?=number_format($timers['routing'], 2); ?>s"],
+		["Call (controller, action, etc.) - <?=number_format($timers['call'], 2); ?>s"],
+		["Complete Dispatch Cycle - <?=number_format($timers['dispatch_cycle'], 2); ?>s"],
 		["Complete Load - <?=number_format($timers['complete_load'], 2); ?>s"],
 		["Complete Load (with li3_perf toolbar) - <?=number_format($timers['complete_load_with_li3_perf'], 2); ?>s"]
 	];
 	var timer_colors = [
 		"#4ddb49", 
-		"#00A5F5", 
+		"#00A5F5",
+		"#00A5F5",
+		"#00A5F5",
 		"#444444"
 	];
 	
-	r.g.text(225, 25, "Time to Load").attr({"font-size": 20});
+	//r.g.text(225, 25, "Time to Load").attr({"font-size": 20});
 	
-	r.g.hbarchart(20, 55, 400, 110, [[<?=$percentages['dispatch_cycle']; ?>],[<?=$percentages['complete_load']; ?>],[100]], {stacked: false, colors: timer_colors}).label(timer_labels);
+	r.g.hbarchart(5, 5, 400, 200, [[<?=$percentages['routing']; ?>],[<?=$percentages['call']; ?>],[<?=$percentages['dispatch_cycle']; ?>],[<?=$percentages['complete_load']; ?>],[100]], {stacked: false, colors: timer_colors}).label(timer_labels);
 	// 
 	//r.g.hbarchart(10, 25, 300, 25, [[100], [200], [300]], {stacked: true}).hover(fin, fout);
 	

@@ -3,6 +3,36 @@ use lithium\action\Dispatcher;
 use lithium\template\View;
 use li3_perf\extensions\util\Data;
 use lithium\core\Libraries;
+use lithium\net\http\Router;
+
+Dispatcher::applyFilter('_callable', function($self, $params, $chain) {
+	// At this point, the routing has completed. In order to call _callable, it's routed.
+	// So this is ever so slightly off actually.
+	Data::append('timers', array('li3_perf_has_route' => microtime(true)));
+	
+	$result = $chain->next($self, $params, $chain);
+	
+	// Now that we know whether or not the request is callable, it's going to be called.
+	// This is esentially right before the code in the controller action is executed.
+	// So mark the time.
+	Data::append('timers', array('li3_perf_start_call' => microtime(true)));
+	
+	return $result;
+});
+
+Dispatcher::applyFilter('_call', function($self, $params, $chain) {
+	
+	$result = $chain->next($self, $params, $chain);
+	
+	// At this point the controller action has been called and now a response will be returned.
+	// $result here contains the response and we've been setting timers all along the way...
+	// The next time we'll be working with the same response is under the next filter below on 
+	// run() AFTER $result = $chain->next() is called... That's the end of the dispatch cycle.
+	// The $result = part below is actually before this filter and the filter on _callable() above.
+	Data::append('timers', array('li3_perf_end_call' => microtime(true)));
+	
+	return $result;
+});
 
 // Apply a filter that will render the toolbar and mark some timers.
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
@@ -30,6 +60,8 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 			array(
 				'timers' => $timers += array(
 					'dispatch_cycle' => $timers['li3_perf_end'] - $timers['li3_perf_start_dispatch'],
+					'routing' => $timers['li3_perf_has_route'] - $timers['li3_perf_start_dispatch'],
+					'call' => $timers['li3_perf_end_call'] - $timers['li3_perf_start_call'],
 					'complete_load_with_li3_perf' => microtime(true) - $timers['li3_perf_start'],
 					'complete_load' => ($timers['li3_perf_end'] - $timers['li3_perf_start']) - $timers['_filter_for_variables'] - $timers['_filter_for_queries']
 				),
