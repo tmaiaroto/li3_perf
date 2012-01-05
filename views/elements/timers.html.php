@@ -7,9 +7,7 @@ $percentages['routing'] = ($timers['routing'] / $total) * 100;
 $percentages['call'] = ($timers['call'] / $total) * 100;
 ?>
 <h2>Time to Load</h2>
-<?=$this->li3perf->printVars($timers); ?>
 
-<p></p>
 <div id="holder" style="height: 205px;"></div>
 <p>Note: The time to route and call the code for the request should just about equal the complete dispatch cycle. If not, something is wrong.</p>
 
@@ -78,7 +76,7 @@ window.onload = function () {
 	
 	//r.g.text(225, 25, "Time to Load").attr({"font-size": 20});
 	
-	r.g.hbarchart(5, 5, 400, 200, [[<?=$percentages['routing']; ?>],[<?=$percentages['call']; ?>],[<?=$percentages['dispatch_cycle']; ?>],[<?=$percentages['complete_load']; ?>],[100]], {stacked: false, colors: timer_colors}).label(timer_labels);
+	r.g.hbarchart(0, 0, 400, 200, [[<?=$percentages['routing']; ?>],[<?=$percentages['call']; ?>],[<?=$percentages['dispatch_cycle']; ?>],[<?=$percentages['complete_load']; ?>],[100]], {stacked: false, colors: timer_colors}).label(timer_labels);
 	// 
 	//r.g.hbarchart(10, 25, 300, 25, [[100], [200], [300]], {stacked: true}).hover(fin, fout);
 	
@@ -86,3 +84,4 @@ window.onload = function () {
 
 };
 </script>
+<?php // echo $this->li3perf->printVars($timers); ?>
