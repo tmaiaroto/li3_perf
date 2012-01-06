@@ -8,6 +8,8 @@
 		<div id="li3-perf-toolbar-links">
 			<?=$this->html->link($this->html->image('/li3_perf/img/stats.png') . 'Queries', '#', array('id' => 'lp-queries', 'class' => 'li3-perf-link', 'escape' => false)); ?>
 			
+			<?=$this->html->link($this->html->image('/li3_perf/img/line-chart.png') . 'Graph', '#', array('id' => 'lp-perf-graph', 'class' => 'li3-perf-link', 'escape' => false)); ?>
+			
 			<?=$this->html->link($this->html->image('/li3_perf/img/stopwatch.png') . 'Time', '#', array('id' => 'lp-timing', 'class' => 'li3-perf-link', 'escape' => false)); ?>
 			
 			<?=$this->html->link($this->html->image('/li3_perf/img/puzzle.png') . 'Vars', '#', array('id' => 'lp-variables', 'class' => 'li3-perf-link', 'escape' => false)); ?>
@@ -27,6 +29,20 @@
 					array(
 						'library' => 'li3_perf',
 						'template' => 'queries',
+						'layout' => 'empty'
+				));
+				?>
+			</div>
+			
+			<div id="li3-perf-graph">
+				<?php
+				echo $this->view()->render('all', 
+					array(
+						'timers' => $timers
+					), 
+					array(
+						'library' => 'li3_perf',
+						'template' => 'perf_graph',
 						'layout' => 'empty'
 				));
 				?>

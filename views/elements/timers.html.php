@@ -8,6 +8,7 @@ $percentages['call'] = ($timers['call'] / $total) * 100;
 ?>
 <h2>Time to Load</h2>
 
+<?php var_dump(xdebug_time_index()); ?>
 <div id="holder" style="height: 205px;"></div>
 <p>Note: The time to route and call the code for the request should just about equal the complete dispatch cycle. If not, something is wrong.</p>
 

@@ -14,6 +14,14 @@ $(document).ready(function() {
 		$('#li3-perf-queries div').show();
 	});
 	
+	// Show performance graph
+	$('#lp-perf-graph').click(function() {
+		toolbarExpand();
+		$('#li3-perf-content div').hide();
+		$('#li3-perf-graph').show();
+		$('#li3-perf-graph div').show();
+	});
+	
 	// Show timers
 	$('#lp-timing').click(function() {
 		toolbarExpand();
