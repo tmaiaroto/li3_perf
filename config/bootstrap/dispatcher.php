@@ -36,6 +36,10 @@ Dispatcher::applyFilter('_call', function($self, $params, $chain) {
 
 // Apply a filter that will render the toolbar and mark some timers.
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
+	if(substr($params['request']->url, 0, 17) == '/li3_perf/profile') {
+		return $chain->next($self, $params, $chain);
+	}
+	
 	Data::append('timers', array('li3_perf_start_dispatch' => microtime(true)));
 	
 	$result = $chain->next($self, $params, $chain);

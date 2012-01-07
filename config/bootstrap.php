@@ -5,9 +5,6 @@ use li3_perf\extensions\util\Data;
 //$li3_perf_start = microtime(true);
 Data::set('timers', array('li3_perf_start' => microtime(true)));
 
-// Include webgrind
-require LITHIUM_APP_PATH . '/libraries/li3_perf/extensions/webgrind/library/bootstrap.php';
-
 // Get the queries
 require __DIR__ . '/bootstrap/queries.php';
 
