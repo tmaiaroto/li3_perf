@@ -7,13 +7,13 @@
 namespace li3_perf\extensions\util;
 
 class Data extends \lithium\core\StaticObject {
-	
+
 	static $data = array(
 		'view_vars' => array(),
 		'queries' => array(),
 		'timers' => array()
 	);
-	
+
 	/**
 	 * Sets data.
 	*/
@@ -24,18 +24,18 @@ class Data extends \lithium\core\StaticObject {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Appends data.
 	*/
 	static public function append($key=null, $value=null) {
 		if(!empty($key)) {
-			static::$data[$key] += $value;
+			static::$data[$key] = array_merge(static::$data[$key], $value);
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets data.
 	*/

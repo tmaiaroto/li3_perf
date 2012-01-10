@@ -2,7 +2,9 @@
 $total_queries = count($queries);
 $total_query_time = 0;
 foreach($queries as $query) {
-	$total_query_time += $query['explain']['millis'];
+	$total_query_time += !empty($query['explain']['millis']) ?
+		$query['explain']['millis'] :
+		0;
 }
 ?>
 <h2>Queries</h2>
