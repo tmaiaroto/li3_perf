@@ -51,42 +51,6 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 	// Render the toolbar (unless it's an asset from the li3_perf library)
 	// Why? See li3_perf\extensions\util\Asset
 	if(!isset($params['request']->params['asset_type'])) {
-		$View = new View(array(
-			'paths' => array(
-				'template' => '{:library}/views/elements/{:template}.{:type}.php',
-				'layout'   => '{:library}/views/layouts/{:layout}.{:type}.php',
-			)
-		));
-
-		$timers = Data::get('timers');
-
-		$toolbar = $View->render('all',
-			array(
-				'timers' => $timers += array(
-					'dispatch_cycle' => $timers['li3_perf_end'] - $timers['li3_perf_start_dispatch'],
-					'routing' => $timers['li3_perf_has_route'] - $timers['li3_perf_start_dispatch'],
-					'call' => isset($timers['li3_perf_end_call']) && isset($timers['li3_perf_start_call']) ?
-						$timers['li3_perf_end_call'] - $timers['li3_perf_start_call'] :
-						0,
-					'complete_load_with_li3_perf' => microtime(true) - $timers['li3_perf_start'],
-					'complete_load' => ($timers['li3_perf_end'] - $timers['li3_perf_start']) - $timers['_filter_for_variables'] - $timers['_filter_for_queries']
-				),
-				'vars' => array(
-					'request' => $params['request']->params,
-					'view' => Data::get('view_vars')
-				),
-				'queries' => Data::get('queries')
-			),
-			array(
-				'library' => 'li3_perf',
-				'template' => 'toolbar',
-				'layout' => 'default'
-		));
-
-		// Add the toolbar to the body of the current page. Don't just echo it out now.
-		// There are sometimes issues with the headers already being sent otherwise.
-		// TODO: IF proper HTML were to be desired, perhaps insert $toolbar into the body in the
-		// proper spot within the HTML.
 		$skip = false;
 		$li3_perf = Libraries::get('li3_perf');
 		if(isset($li3_perf['skip'])) {
@@ -116,9 +80,55 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 			}
 		}
 
-		if(isset($result->body[0]) && !$skip) {
-			$result->body[0] = $toolbar . $result->body[0];
+		if ($skip || !isset($result->body[0])) {
+			return $result;
 		}
+
+		$timers = Data::get('timers') + array(
+			'li3_perf_start' => 0,
+			'li3_perf_end' => 0,
+			'li3_perf_start_dispatch' => 0,
+			'li3_perf_has_route' => 0,
+			'li3_perf_start_call' => 0,
+			'li3_perf_end_call' => 0,
+			'_filter_for_variables' => 0,
+			'_filter_for_queries' => 0
+		);
+
+		$View = new View(array(
+			'paths' => array(
+				'template' => '{:library}/views/elements/{:template}.{:type}.php',
+				'layout'   => '{:library}/views/layouts/{:layout}.{:type}.php',
+			)
+		));
+		$toolbar = $View->render('all',
+			array(
+				'timers' => $timers += array(
+					'dispatch_cycle' => $timers['li3_perf_end'] - $timers['li3_perf_start_dispatch'],
+					'routing' => $timers['li3_perf_has_route'] - $timers['li3_perf_start_dispatch'],
+					'call' => isset($timers['li3_perf_end_call']) && isset($timers['li3_perf_start_call']) ?
+						$timers['li3_perf_end_call'] - $timers['li3_perf_start_call'] :
+						0,
+					'complete_load_with_li3_perf' => microtime(true) - $timers['li3_perf_start'],
+					'complete_load' => ($timers['li3_perf_end'] - $timers['li3_perf_start']) - $timers['_filter_for_variables'] - $timers['_filter_for_queries']
+				),
+				'vars' => array(
+					'request' => $params['request']->params,
+					'view' => Data::get('view_vars')
+				),
+				'queries' => Data::get('queries')
+			),
+			array(
+				'library' => 'li3_perf',
+				'template' => 'toolbar',
+				'layout' => 'default'
+		));
+
+		// Add the toolbar to the body of the current page. Don't just echo it out now.
+		// There are sometimes issues with the headers already being sent otherwise.
+		// TODO: IF proper HTML were to be desired, perhaps insert $toolbar into the body in the
+		// proper spot within the HTML.
+		$result->body[0] = $toolbar . $result->body[0];
 	}
 
 	return $result;
