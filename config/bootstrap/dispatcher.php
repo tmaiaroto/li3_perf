@@ -124,11 +124,11 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 				'layout' => 'default'
 		));
 
-		// Add the toolbar to the body of the current page. Don't just echo it out now.
-		// There are sometimes issues with the headers already being sent otherwise.
-		// TODO: IF proper HTML were to be desired, perhaps insert $toolbar into the body in the
-		// proper spot within the HTML.
-		$result->body[0] = $toolbar . $result->body[0];
+		if (preg_match('/<!--\s*LI3_PERF_TOOLBAR\s*-->/si', $result->body[0], $match)) {
+			$result->body[0] = str_replace($match[0], $toolbar, $result->body[0]);
+		} else {
+			$result->body[0] = $toolbar . $result->body[0];
+		}
 	}
 
 	return $result;
