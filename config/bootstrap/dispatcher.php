@@ -51,7 +51,7 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 	// Render the toolbar (unless it's an asset from the li3_perf library)
 	// Why? See li3_perf\extensions\util\Asset
 	$content_type = isset($result->headers['Content-Type']) ? $result->headers['Content-Type'] : '';
-	$content_type = array_shift(explode(';', $result->headers['Content-Type'], 2));
+	$content_type = array_shift(explode(';', $content_type, 2));
 	if(
 		!isset($params['request']->params['asset_type']) &&
 		(!$content_type || $content_type == 'text/html')
