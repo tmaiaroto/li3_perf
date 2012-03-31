@@ -1,5 +1,5 @@
 <div id="li3-perf-toolbar">
-	<div id="li3-perf-toolbar-content-wrapper" style="background: url('85bg.png') repeat;">
+	<div id="li3-perf-toolbar-content-wrapper" style="background: url('/li3_perf/img/85bg.png') repeat;">
 	
 		<?=$this->html->image('/li3_perf/img/clock.png', array('title' => 'execution time', 'alt' => 'execution time')) . ' ' . number_format($timers['complete_load'], 2) . 's'; ?>
 
