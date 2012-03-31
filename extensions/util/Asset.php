@@ -32,7 +32,11 @@ class Asset {
 		
 		$headers = array($_SERVER['SERVER_PROTOCOL'].' 404 Not Found' => null, 'Content-Type' => null, 'Status' => '404 Not Found');
 		$body = '';
-		$full_asset_path = LITHIUM_APP_PATH . '/libraries/' . $library . '/webroot/' . $asset_type . '/' . $asset;
+		if (strpos(__DIR__, LITHIUM_LIBRARY_PATH) !== FALSE) {
+			$full_asset_path = LITHIUM_LIBRARY_PATH . '/' . $library . '/webroot/' . $asset_type . '/' . $asset;
+		} else {
+			$full_asset_path = LITHIUM_APP_PATH . '/libraries/' . $library . '/webroot/' . $asset_type . '/' . $asset;
+		}
 		if(file_exists($full_asset_path)) {
 			// get the full content-type, default to text/plain
 			$finfo = new finfo(FILEINFO_MIME, null);
