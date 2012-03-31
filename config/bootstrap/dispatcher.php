@@ -54,7 +54,7 @@ Dispatcher::applyFilter('run', function($self, $params, $chain) {
 	if(
 		!isset($params['request']->params['asset_type']) &&
 		(!$content_type || $content_type == 'text/html')
-	)
+	) {
 		$skip = false;
 		$li3_perf = Libraries::get('li3_perf');
 		if(isset($li3_perf['skip'])) {
