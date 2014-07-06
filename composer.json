@@ -1,0 +1,22 @@
+{
+  "name": "tmaiaroto/li3_perf",
+  "type": "lithium-library",
+  "description": "li3_perf provides a toolbar for your Lithium application useful for debugging.",
+  "keywords": ["lithium", "performance", "debugging"],
+  "homepage": "https://github.com/tmaiaroto/li3_perf",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tom Maiaroto"
+    }
+  ],
+  "autoload": {
+    "psr-0": { "li3_perf" : "" }
+  },
+  "require": {
+    "php": ">=5.3.2"
+  },
+  "require": {
+    "composer/installers": "*"
+  }
+}
